@@ -28,6 +28,8 @@ public class Soundex
     StringBuilder encoded = new StringBuilder();
     char prevCode = ' '; // Use a non-matching character for initial comparison
 
+    int consonantCount = 0; // Track consonant count for truncation
+
     foreach (char c in chars)
     {
       char code = GetSoundexCode(c);
@@ -35,6 +37,12 @@ public class Soundex
       {
         encoded.Append(code);
         prevCode = code;
+        consonantCount++; // Increment only for consonants (not '0')
+      }
+
+      if (consonantCount >= 3) // Stop encoding after 3 consonants
+      {
+        break;
       }
     }
 
