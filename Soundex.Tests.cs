@@ -5,9 +5,10 @@ public class SoundexTests
     [Fact]
     public void GenerateSoundex_ReturnsCorrectSoundex_ForValidInput()
     {
-       
+        // Arrange
         string name = "Washington";
 
+        // Act
         string soundex = Soundex.GenerateSoundex(name);
 
         // Assert
