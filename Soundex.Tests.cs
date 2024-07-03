@@ -2,74 +2,80 @@ using Xunit;
 
 public class SoundexTests
 {
-    [Fact]
-    public void GenerateSoundex_ReturnsCorrectSoundex_ForValidInput()
-    {
-        // Arrange
-        string name = "Washington";
+  [Fact]
+  public void GenerateSoundex_EmptyString_ReturnsEmptyString()
+  {
+    string name = "";
+    string expectedSoundex = "";
 
-        // Act
-        string soundex = Soundex.GenerateSoundex(name);
+    string actualSoundex = Soundex.GenerateSoundex(name);
 
-        // Assert
-        Assert.Equal("W252", soundex);
-    }
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
 
-    [Fact]
-    public void GenerateSoundex_ReturnsEmptyString_ForNullOrEmptyInput()
-    {
-        // Arrange
-        string emptyName = string.Empty;
-        string nullName = null;
+  [Fact]
+  public void GenerateSoundex_NullInput_ReturnsEmptyString()
+  {
+    string name = null;
+    string expectedSoundex = "";
 
-        // Act
-        string emptySoundex = Soundex.GenerateSoundex(emptyName);
-        string nullSoundex = Soundex.GenerateSoundex(nullName);
+    string actualSoundex = Soundex.GenerateSoundex(name);
 
-        // Assert
-        Assert.Equal(string.Empty, emptySoundex);
-        Assert.Equal(string.Empty, nullSoundex);
-    }
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
 
-    [Fact]
-    public void GenerateSoundex_TruncatesLongNames()
-    {
-        // Arrange
-        string longName = "Roosevelt";
+  [Fact]
+  public void GenerateSoundex_SingleLetter_ReturnsFirstLetter()
+  {
+    string name = "A";
+    string expectedSoundex = "A000";
 
-        // Act
-        string soundex = Soundex.GenerateSoundex(longName);
+    string actualSoundex = Soundex.GenerateSoundex(name);
 
-        // Assert
-        Assert.Equal("R234", soundex);
-    }
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
 
-    [Fact]
-    public void GenerateSoundex_HandlesCaseInsensitiveInput()
-    {
-        // Arrange
-        string mixedCaseName = "wAsHinGTon";
+  [Fact]
+  public void GenerateSoundex_Robert_ReturnsR163()
+  {
+    string name = "Robert";
+    string expectedSoundex = "R163";
 
-        // Act
-        string soundex = Soundex.GenerateSoundex(mixedCaseName);
+    string actualSoundex = Soundex.GenerateSoundex(name);
 
-        // Assert
-        Assert.Equal("W252", soundex);
-    }
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
 
-    [Fact]
-    public void GenerateSoundex_HandlesEdgeCases()
-    {
-        // Arrange
-        string edgeCase1 = "W";
-        string edgeCase2 = "Rrr";
+  [Fact]
+  public void GenerateSoundex_Ashleigh_ReturnsA234()
+  {
+    string name = "Ashleigh";
+    string expectedSoundex = "A234";
 
-        // Act
-        string soundex1 = Soundex.GenerateSoundex(edgeCase1);
-        string soundex2 = Soundex.GenerateSoundex(edgeCase2);
+    string actualSoundex = Soundex.GenerateSoundex(name);
 
-        // Assert
-        Assert.Equal("W000", soundex1);
-        Assert.Equal("R600", soundex2);
-    }
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
+
+  [Fact]
+  public void GenerateSoundex_LongName_TruncatesToFirstFourLetters()
+  {
+    string name = "ThisIsALongName";
+    string expectedSoundex = "T223";
+
+    string actualSoundex = Soundex.GenerateSoundex(name);
+
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
+
+  [Fact]
+  public void GenerateSoundex_HandlesVowelsAndH_ReturnsEmptyEncoding()
+  {
+    string name = "Hello";
+    string expectedSoundex = "H000";
+
+    string actualSoundex = Soundex.GenerateSoundex(name);
+
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
 }
