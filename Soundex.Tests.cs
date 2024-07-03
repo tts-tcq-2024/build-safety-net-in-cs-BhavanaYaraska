@@ -78,4 +78,39 @@ public class SoundexTests
 
     Assert.Equal(expectedSoundex, actualSoundex);
   }
+
+  // New Test Cases
+
+  [Fact]
+  public void GenerateSoundex_NameWithSpecialCharacters_EncodesOnlyLetters()
+  {
+    string name = "Alph@bet#Gamma";
+    string expectedSoundex = "A123";
+
+    string actualSoundex = Soundex.GenerateSoundex(name);
+
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
+
+  [Fact]
+  public void GenerateSoundex_RepeatedConsonants_EncodesUniquely()
+  {
+    string name = "Mississippi";
+    string expectedSoundex = "M2123";
+
+    string actualSoundex = Soundex.GenerateSoundex(name);
+
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
+
+  [Fact]
+  public void GenerateSoundex_LongNameWithMoreThanThreeConsonants_TruncatesAfterThree()
+  {
+    string name = "Alexander";
+    string expectedSoundex = "A236";
+
+    string actualSoundex = Soundex.GenerateSoundex(name);
+
+    Assert.Equal(expectedSoundex, actualSoundex);
+  }
 }
