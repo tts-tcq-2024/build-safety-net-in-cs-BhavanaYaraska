@@ -4,9 +4,8 @@ using System.Text;
 public class Soundex
 {
     private static readonly string[] SoundexMapping = {
-        // A, B, C, D, E, F, G, H, I, J, K, L, M
-        "01230120022455012623010202", // N, O, P, Q, R, S, T, U, V, W, X, Y, Z
-        "00000000000000000000000000"
+        "01230120022455012623010202", // A-M
+        "00000000000000000000000000"  // N-Z
     };
 
     public static string GenerateSoundex(string name)
@@ -28,12 +27,17 @@ public class Soundex
             }
         }
 
+        PadSoundex(soundex);
+
+        return soundex.ToString();
+    }
+
+    private static void PadSoundex(StringBuilder soundex)
+    {
         while (soundex.Length < 4)
         {
             soundex.Append('0');
         }
-
-        return soundex.ToString();
     }
 
     private static char GetSoundexCode(char c)
@@ -43,6 +47,6 @@ public class Soundex
             return '0';
 
         int index = c - 'A';
-        return SoundexMapping[0][index];
+        return SoundexMapping[index / 13][index % 13];
     }
 }
