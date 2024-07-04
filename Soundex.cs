@@ -3,66 +3,61 @@ using System.Text;
 
 public class Soundex
 {
-    public static string GenerateSoundex(string name)
+  private static readonly string[] SoundexMapping = {
+    "01230120022455012623010202", // A-M
+    "00000000000000000000000000"  // N-Z
+  };
+
+  public static string GenerateSoundex(string name)
+  {
+    if (string.IsNullOrEmpty(name))
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return string.Empty;
-        }
-
-        StringBuilder soundex = new StringBuilder();
-        soundex.Append(char.ToUpper(name[0]));
-        char prevCode = GetSoundexCode(name[0]);
-
-        for (int i = 1; i < name.Length && soundex.Length < 4; i++)
-        {
-            char code = GetSoundexCode(name[i]);
-            if (code != '0' && code != prevCode)
-            {
-                soundex.Append(code);
-                prevCode = code;
-            }
-        }
-
-        while (soundex.Length < 4)
-        {
-            soundex.Append('0');
-        }
-
-        return soundex.ToString();
+      return string.Empty;
     }
 
-    private static char GetSoundexCode(char c)
+    string firstChar = char.ToUpper(name[0]).ToString();
+    string remainingChars = name.Substring(1);
+
+    string encodedChars = EncodeChars(remainingChars);
+
+    return firstChar + encodedChars.PadRight(4, '0');
+  }
+
+  private static string EncodeChars(string chars)
+  {
+    StringBuilder encoded = new StringBuilder();
+    char prevCode = ' '; // Use a non-matching character for initial comparison
+
+    int consonantCount = 0; // Track consonant count for truncation
+
+    foreach (char c in chars)
     {
-        c = char.ToUpper(c);
-        switch (c)
-        {
-            case 'B':
-            case 'F':
-            case 'P':
-            case 'V':
-                return '1';
-            case 'C':
-            case 'G':
-            case 'J':
-            case 'K':
-            case 'Q':
-            case 'S':
-            case 'X':
-            case 'Z':
-                return '2';
-            case 'D':
-            case 'T':
-                return '3';
-            case 'L':
-                return '4';
-            case 'M':
-            case 'N':
-                return '5';
-            case 'R':
-                return '6';
-            default:
-                return '0'; // For A, E, I, O, U, H, W, Y
-        }
+      char code = GetSoundexCode(c);
+      if (code != '0' && code != prevCode)
+      {
+        encoded.Append(code);
+        prevCode = code;
+        consonantCount++; // Increment only for consonants (not '0')
+      }
+
+      if (consonantCount >= 3) // Stop encoding after 3 consonants
+      {
+        break;
+      }
     }
+
+    return encoded.ToString();
+  }
+
+  private static char GetSoundexCode(char c)
+  {
+    c = char.ToUpper(c);
+    int index = c - 'A';
+    if (index < 0 || index >= SoundexMapping.Length * SoundexMapping[0].Length)
+    {
+      return '0';
+    }
+
+    return SoundexMapping[index / 13][index % 13];
+  }
 }
